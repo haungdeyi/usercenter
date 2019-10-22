@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <!--必须先将父工程install到本地仓库，否则其他模块无法引用到当前模块install到本地仓库的jar包-->
+    <parent>
+        <artifactId>usercenter</artifactId>
+        <groupId>com.huangdeyi.distributed</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>userService</artifactId>
+
+    <name>userService</name>
+    <!-- FIXME change it to the project's website -->
+    <url>http://www.example.com</url>
+
+    <dependencies>
+    </dependencies>
+
+
+</project>

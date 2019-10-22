@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/aop
+                           http://www.springframework.org/schema/context/spring-aop.xsd
+                           http://www.springframework.org/schema/tx
+                           http://www.springframework.org/schema/context/spring-tx.xsd
+                           http://code.alibabatech.com/schema/dubbo
+                           http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+    <!--开启注解配置-->
+    <context:annotation-config/>
+
+    <!--扫描指定包下的bean放入容器-->
+    <context:component-scan base-package="com.huangdeyi.distributed"/>
+
+    <!--当前项目在整个分布式项目里面的唯一名称-->
+    <!--多模块时需要通过id区别-->
+    <dubbo:application name="service" owner="NO" id="service"/>
+    <dubbo:registry id="center" address="zookeeper://192.168.43.99:2181?backup=192.168.43.66:2181,192.168.43.88:2181" register="true" subscribe="true"/>
+    <!--当前服务所使用的协议和通信端口-->
+    <dubbo:protocol name="dubbo" port="20881" host="192.168.43.46"/>
+    <!--提供的服务(接口1.0)-->
+    <dubbo:service id="userService" interface="com.huangdeyi.distributed.userservice.UserService" version="1.0" ref="userservice-provider"/>
+
+    <!--持久层使用Mybatis框架-->
+
+</beans>

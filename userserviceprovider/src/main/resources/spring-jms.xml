@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--整合异步消息的配置-->
+    <!--得到连接工厂-->
+    <bean id="connectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory" destroy-method="clear">
+        <property name="connectionFactory">
+            <bean class="org.apache.activemq.ActiveMQConnectionFactory">
+                <!--注入属性的另外一种写法-->
+                <property name="brokerURL">
+                    <value>failover:(tcp://192.168.43.66:61616,tcp://192.168.43.88:61616,tcp://192.168.43.99:61616)</value>
+                </property>
+            </bean>
+        </property>
+        <property name="maxConnections" value="50"/>
+    </bean>
+
+    <!--配置一个队列消息目的地-->
+    <bean id="destination" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg index="0" value="spring-queue"/>
+    </bean>
+
+    <!-- <bean id="destinationTopic" class="org.apache.activemq.command.ActiveMQTopic">
+         <constructor-arg index="0" value="spring-topic"/>
+     </bean>-->
+
+    <!--得到jms模板-->
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="defaultDestination" ref="destination"/>
+        <!--注入一个消息转换器-->
+        <property name="messageConverter">
+            <bean class="org.springframework.jms.support.converter.SimpleMessageConverter"/>
+        </property>
+    </bean>
+
+    <!--<bean class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="destination" ref="destination"/>
+        <property name="messageListener" ref="xxx"/>
+    </bean>-->
+
+    <!--配置一个消息接收监听器-->
+    <!--<bean class=""/>-->
+</beans>

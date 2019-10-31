@@ -33,8 +33,12 @@
     <dubbo:registry id="center" address="zookeeper://192.168.43.99:2181?backup=192.168.43.66:2181,192.168.43.88:2181" register="true" subscribe="true"/>
     <!--当前服务所使用的协议和通信端口-->
     <dubbo:protocol name="dubbo" port="20881" host="192.168.43.46"/>
-    <!--提供的服务(接口1.0)-->
-    <dubbo:service id="userService" interface="com.huangdeyi.distributed.userservice.UserService" version="1.0" ref="userservice-provider"/>
+    <!--提供的服务(接口1.0),调用超时时间为10s-->
+    <dubbo:service id="userService" interface="com.huangdeyi.distributed.userservice.UserService" timeout="10000" version="1.0" ref="userservice-provider"/>
+
+    <!--导入其他配置文件-->
+    <!--集成分布式消息activemq-->
+    <import resource="classpath:spring-jms.xml"/>
 
     <!--持久层使用Mybatis框架-->
     <!--配置数据库连接池-->

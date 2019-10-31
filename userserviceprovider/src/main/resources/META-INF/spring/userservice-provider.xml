@@ -19,7 +19,13 @@
     <context:annotation-config/>
 
     <!--扫描指定包下的bean放入容器-->
-    <context:component-scan base-package="com.huangdeyi.distributed"/>
+    <context:component-scan base-package="com.huangdeyi.distributed">
+        <!--不扫描Repository注解修饰的组件-->
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+    </context:component-scan>
+
+    <!--解析properties配置文件-->
+    <context:property-placeholder location="classpath:application.properties"/>
 
     <!--当前项目在整个分布式项目里面的唯一名称-->
     <!--多模块时需要通过id区别-->
@@ -31,5 +37,53 @@
     <dubbo:service id="userService" interface="com.huangdeyi.distributed.userservice.UserService" version="1.0" ref="userservice-provider"/>
 
     <!--持久层使用Mybatis框架-->
+    <!--配置数据库连接池-->
+    <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+         <property name="driverClassName" value="${jdbc.Driver}"/>
+         <property name="jdbcUrl" value="${jdbc.url}"/>
+         <property name="username" value="${jdbc.user}"/>
+         <property name="password" value="${jdbc.password}"/>
+         <property name="maximumPoolSize" value="${jdbc.maximumPoolSize}"/>
+         <property name="connectionTimeout" value="${jdbc.connTimeout}"/>
+    </bean>
+
+    <!--配置sqlSessionFactory-->
+    <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:mybatis/mybatis.xml"/>
+        <!--注入数据库连接池-->
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--使用SqlSessionTemplate的方式操作mapper接口(不推荐)-->
+    <!--<bean id="sessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">-->
+        <!--注入sessionFactory-->
+        <!--<constructor-arg index="0" ref="sessionFactory"/>
+    </bean>-->
+
+    <!--一个一个的配置mapper(不推荐)-->
+    <!--<bean class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--指定mapper接口-->
+       <!-- <property name="mapperInterface" value="com.huangdeyi.distributed.dao.usercenterDao"/>-->
+        <!--指定sqlSessionFactory或者SqlSessionTemplate-->
+       <!-- <property name="sqlSessionFactory" ref="sessionFactory"/>-->
+   <!-- </bean>-->
+
+    <!--通过扫描的方式配置mapper接口(推荐使用)-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--指定扫描的包-->
+        <property name="basePackage" value="com.huangdeyi.distributed.dao"/>
+        <!--扫描指定注解修饰的类-->
+        <property name="annotationClass" value="org.springframework.stereotype.Repository"/>
+        <!--指定sqlSessionFactory或者SqlSessionTemplate-->
+        <property name="sqlSessionFactoryBeanName" value="sessionFactory"/>
+    </bean>
+
+    <!--配置事务管理器-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--使用声明式事务管理方式-->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
 
 </beans>

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE configuration
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+        "http://mybatis.org/dtd/mybatis-3.config.dtd">
 <configuration>
-    <!--全局配置-->
     <settings>
         <!-- 打开延迟加载 -->
         <setting name="lazyLoadingEnabled" value="true"/>
@@ -26,14 +25,14 @@
         <!--<typeAlias type="com.huangdeyi.distributed.domain.User" alias="user"/>-->
 
         <!-- 扫描指定包中的所有类，并为它们命名别名 -->
-        <package name="com.domain"/>
+        <package name="com.huangdeyi.distributed.domain"/>
     </typeAliases>
 
     <!--扫描指定包的mapper接口-->
     <mappers>
         <!--xml文件与接口不同名，且不在同一个包下,无法这样引入-->
         <!-- <package name="com.huangdeyi.distributed.dao">-->
-        <mapper resource="classpath:mybatis.usercenterMapper.xml"/>
+        <mapper resource="mybatis/usercenterMapper.xml"/>
     </mappers>
 
 

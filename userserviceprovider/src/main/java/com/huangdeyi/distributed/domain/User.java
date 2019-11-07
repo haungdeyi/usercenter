@@ -6,11 +6,20 @@ import java.util.List;
 
 @Alias("user")
 public class User {
+    private Integer id;
     private String username;
     private String password;
     private Gender gender;
     //订单
     private List<Order> orderList;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return username;

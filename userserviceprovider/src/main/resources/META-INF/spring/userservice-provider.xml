@@ -12,7 +12,7 @@
                            http://www.springframework.org/schema/aop
                            http://www.springframework.org/schema/context/spring-aop.xsd
                            http://www.springframework.org/schema/tx
-                           http://www.springframework.org/schema/context/spring-tx.xsd
+                           http://www.springframework.org/schema/tx/spring-tx.xsd
                            http://code.alibabatech.com/schema/dubbo
                            http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
     <!--开启注解配置-->
@@ -42,7 +42,7 @@
 
     <!--持久层使用Mybatis框架-->
     <!--配置数据库连接池-->
-    <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+    <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource">
          <property name="driverClassName" value="${jdbc.Driver}"/>
          <property name="jdbcUrl" value="${jdbc.url}"/>
          <property name="username" value="${jdbc.user}"/>

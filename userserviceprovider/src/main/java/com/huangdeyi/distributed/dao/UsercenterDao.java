@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 //由mybatis框架扫描生成动态代理对象并放入spring容器中
 @Repository
-public interface usercenterDao {
+public interface UsercenterDao {
 
-    public User getUser(String id);
+    public User getUser(int id);
 }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE configuration
-        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3.config.dtd">
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd"><!--约束文档别写错呀!长点心吧。。。-->
 <configuration>
     <settings>
         <!-- 打开延迟加载 -->
@@ -15,14 +14,14 @@
         <!--<typeAlias type="com.huangdeyi.distributed.domain.User" alias="user"/>-->
 
         <!-- 扫描指定包中的所有类，并为它们命名别名 -->
-        <package name="com.domain"/>
+        <package name="com.huangdeyi.distributed.domain"/>
     </typeAliases>
 
     <!--扫描指定包的mapper接口-->
     <mappers>
         <!--xml文件与接口不同名，且不在同一个接口下-->
         <!-- <package name="com.huangdeyi.distributed.dao">-->
-        <mapper resource="classpath:mybatis.usercenterMapper.xml"/>
+        <mapper resource="mybatis/usercenterMapper.xml"/>
     </mappers>
 
 

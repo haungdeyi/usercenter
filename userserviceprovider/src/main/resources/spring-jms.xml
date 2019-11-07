@@ -7,6 +7,7 @@
     <!--得到连接工厂-->
     <bean id="connectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory" destroy-method="clear">
         <property name="connectionFactory">
+            <!--注入一个bean，效果和ref一样-->
             <bean class="org.apache.activemq.ActiveMQConnectionFactory">
                 <!--注入属性的另外一种写法-->
                 <property name="brokerURL">

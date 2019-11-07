@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3.mapper.dtd">
-<mapper namespace="com.huangdeyi.distributed.dao.usercenterDao"/>
-     <select id="getUser" parameterType="string" resultType="user">
-        select username,age,password
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huangdeyi.distributed.dao.usercenterDao">
+
+    <!--在不定义结果集映射的情况下mybatis会自动根据结果集中的列名和数据类型进行封装-->
+    <!--如果列名或者数据类型不一致则封装失败，抛出异常-->
+    <!--自定义结果集映射之后不再使用默认的结果集封装,-->
+    <resultMap id="userMap" type="user">
+        <!--jdbcType="varchar" javaType="String"不是必须指定的-->
+        <!--默认情况下会自动根据数据类型进行匹配-->
+        <id column="id" property="id" jdbcType="varchar" javaType="String"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <!--当列和属性的数据类型同时满足EnumTypeHandler的映
+            射规则时将使用自定义的类型转换对结果集进行转换-->
+        <result column="gender" property="gender" typeHandler="com.huangdeyi.distributed.domain.EnumTypeHandler"/>
+
+        <!--映射一的一方-->
+
+        <!--映射多的一方-->
+    </resultMap>
+
+    <select id="getUser" parameterType="string" resultMap="userMap">
+        select id,username,password,gengder
         from t_user t
         where t.id = #{id}
-     </select>
+    </select>
+
 </mapper>

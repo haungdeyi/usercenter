@@ -2,11 +2,15 @@ package com.huangdeyi.distributed.domain;
 
 import org.apache.ibatis.type.Alias;
 
+import java.util.List;
+
 @Alias("user")
 public class User {
     private String username;
     private String password;
-    private Integer age;
+    private Gender gender;
+    //订单
+    private List<Order> orderList;
 
     public String getUsername() {
         return username;
@@ -24,11 +28,19 @@ public class User {
         this.password = password;
     }
 
-    public Integer getAge() {
-        return age;
+    public Gender getGender() {
+        return gender;
     }
 
-    public void setAge(Integer age) {
-        this.age = age;
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public List<Order> getOrderList() {
+        return orderList;
+    }
+
+    public void setOrderList(List<Order> orderList) {
+        this.orderList = orderList;
     }
 }

@@ -4,9 +4,19 @@ import org.apache.ibatis.type.Alias;
 
 @Alias("order")
 public class Order {
+    private String id;
     private String name;
     private Double price;
-    private User user;
+    //不能这样关联到一的一方，
+    //private User user;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -24,11 +34,11 @@ public class Order {
         this.price = price;
     }
 
-    public User getUser() {
+   /* public User getUser() {
         return user;
     }
 
     public void setUser(User user) {
         this.user = user;
-    }
+    }*/
 }

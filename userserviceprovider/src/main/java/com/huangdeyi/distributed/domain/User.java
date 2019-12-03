@@ -2,22 +2,26 @@ package com.huangdeyi.distributed.domain;
 
 import org.apache.ibatis.type.Alias;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Alias("user")
-public class User {
-    private Integer id;
+public class User implements Serializable {
+    private static final long serialVersionUID = -7155840542175235221L;
+    private String id;
     private String username;
     private String password;
     private Gender gender;
+    //idCard
+    private IdCard idCard;
     //订单
     private List<Order> orderList;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -43,6 +47,14 @@ public class User {
 
     public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    public IdCard getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(IdCard idCard) {
+        this.idCard = idCard;
     }
 
     public List<Order> getOrderList() {

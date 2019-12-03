@@ -1,5 +1,6 @@
 package com.huangdeyi.distributed.dao;
 
+import com.huangdeyi.distributed.domain.IdCard;
 import com.huangdeyi.distributed.domain.User;
 import org.springframework.stereotype.Repository;
 
@@ -7,5 +8,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UsercenterDao {
 
-    public User getUser(int id);
+    public User getUser(String id);
+
+    public User getUserByJoin(String id);
+
+    //查找用户的IdCard
+    public IdCard getUserIdCard(String userid);
 }

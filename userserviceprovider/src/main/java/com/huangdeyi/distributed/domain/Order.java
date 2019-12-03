@@ -2,8 +2,11 @@ package com.huangdeyi.distributed.domain;
 
 import org.apache.ibatis.type.Alias;
 
+import java.io.Serializable;
+
 @Alias("order")
-public class Order {
+public class Order implements Serializable {
+    private static final long serialVersionUID = -7006023296285786083L;
     private String id;
     private String name;
     private Double price;

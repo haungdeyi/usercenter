@@ -11,16 +11,20 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+//指定使用自定义类型转换器的匹配规则
 @MappedTypes({Gender.class})
-@MappedJdbcTypes({JdbcType.INTEGER})
+@MappedJdbcTypes({JdbcType.VARCHAR})
 public class EnumTypeHandler implements TypeHandler<Gender> {
+    public static  final String CONSTANS_MAN = "男";
+    public static  final String CONSTANS_FEMALE= "女";
+
     //设置参数时转换
     public void setParameter(PreparedStatement preparedStatement, int i, Gender gender, JdbcType jdbcType) throws SQLException {
         if(Gender.MAN.equals(gender)){
-            preparedStatement.setString(i,"男");
+            preparedStatement.setString(i,CONSTANS_MAN);
         }
         else{
-            preparedStatement.setString(i,"女");
+            preparedStatement.setString(i,CONSTANS_FEMALE);
         }
     }
 
@@ -28,7 +32,7 @@ public class EnumTypeHandler implements TypeHandler<Gender> {
     public Gender getResult(ResultSet resultSet, String s) throws SQLException {
         //resultSet是返回的结果集，s是对应的列名
         String gender = resultSet.getString(s);
-        if("男".equals(gender)){
+        if(CONSTANS_MAN.equals(gender)){
             return Gender.MAN;
         }
         else{
@@ -40,7 +44,7 @@ public class EnumTypeHandler implements TypeHandler<Gender> {
 
         //resultSet是返回的结果集，i是对应的列的在结果集中的索引
         String gender = resultSet.getString(i);
-        if("男".equals(gender)){
+        if(CONSTANS_MAN.equals(gender)){
             return Gender.MAN;
         }
         else{
@@ -50,8 +54,8 @@ public class EnumTypeHandler implements TypeHandler<Gender> {
 
     public Gender getResult(CallableStatement callableStatement, int i) throws SQLException {
         //i是对应的列的在结果集中的索引
-        String gender = callableStatement.getString(i);
-        if("男".equals(gender)){
+        String  gender = callableStatement.getString(i);
+        if(CONSTANS_MAN.equals(gender)){
             return Gender.MAN;
         }
         else{

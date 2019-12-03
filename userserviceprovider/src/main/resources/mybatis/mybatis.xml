@@ -1,38 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE configuration
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3.config.dtd">
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+    <!--配置文件的子元素一定要按顺序摆放，不然会出错!!!!!!-->
     <settings>
         <!-- 打开延迟加载 -->
-        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="lazyLoadingEnabled" value="false"/>
         <!-- 关闭积极加载 -->
-        <setting name="aggressiveLazyLoading" value="false"/>
+       <!-- <setting name="aggressiveLazyLoading" value="false"/>-->
     </settings>
-
-    <!--自定义类型转换处理器-->
-    <typeHandlers>
-        <!--第一种方式：定义单个类型转换处理器,处理性别转换-->
-        <!--<typeHandler javaType="com.huangdeyi.distributed.domain.Gender"
-                     handler="com.huangdeyi.distributed.domain.EnumTypeHandler"/>-->
-        <!--第二种方式：扫描指定包下定义的类型转换器-->
-        <package name="com.huangdeyi.distributed.domain"/>
-    </typeHandlers>
 
     <!--为pojo定义别名-->
     <typeAliases>
         <!-- 定义单个别名 -->
         <!--<typeAlias type="com.huangdeyi.distributed.domain.User" alias="user"/>-->
 
-        <!-- 扫描指定包中的所有类，并为它们命名别名 -->
+        <!-- 扫描指定包中的所有类，并为它们命名别名，默认为类名首字母小写 -->
         <package name="com.huangdeyi.distributed.domain"/>
     </typeAliases>
+
+    <!--自定义类型转换处理器-->
+    <typeHandlers>
+        <!--第一种方式：定义单个类型转换处理器,处理性别转换-->
+        <!--<typeHandler javaType="com.huangdeyi.distributed.domain.Gender" jdbcType="INTEGER"
+                     handler="com.huangdeyi.distributed.domain.EnumTypeHandler"/>-->
+
+        <!--第二种方式：扫描指定包下定义的类型转换器，需要在类上添加注解-->
+        <package name="com.huangdeyi.distributed.domain"/>
+    </typeHandlers>
 
     <!--扫描指定包的mapper接口-->
     <mappers>
         <!--xml文件与接口不同名，且不在同一个包下,无法这样引入-->
         <!-- <package name="com.huangdeyi.distributed.dao">-->
         <mapper resource="mybatis/usercenterMapper.xml"/>
+        <mapper resource="mybatis/OrderMapper.xml"/>
     </mappers>
 
 

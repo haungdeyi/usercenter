@@ -72,7 +72,7 @@
        <!-- <property name="sqlSessionFactory" ref="sessionFactory"/>-->
    <!-- </bean>-->
 
-    <!--通过扫描的方式配置mapper接口(推荐使用)-->
+    <!--通过扫描的方式配置生成mapper接口的动态代理对象(推荐使用)-->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <!--指定扫描的包-->
         <property name="basePackage" value="com.huangdeyi.distributed.dao"/>

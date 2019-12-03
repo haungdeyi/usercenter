@@ -42,10 +42,12 @@ public class Provider implements UserService {
     public UserServiceResponse login(final UserServiceRequest request) {
         System.out.println(request.getParams() + ":悄悄来过");
         UserServiceResponse response = new UserServiceResponse();
-        User user = usercenterDao.getUser(2);
+        User user = usercenterDao.getUser("2");
         if(user != null){
+            System.out.println(user.getIdCard().getCreateTime());
             response.setState("666");
-            response.setData("hello 呀：" + request.getParams());
+            //返回到调用端的数据中含有Date类型，dubbo的默认序列化机制会把Date类型序列化成时间戳
+            response.setData(user);
             //发送消息，记录用户登录
             if( null != request.getParams()){
                 jmsTemplate.send(new MessageCreator() {

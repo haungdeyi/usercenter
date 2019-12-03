@@ -2,30 +2,95 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.huangdeyi.distributed.dao.usercenterDao">
-
+<mapper namespace="com.huangdeyi.distributed.dao.UsercenterDao">
     <!--在不定义结果集映射的情况下mybatis会自动根据结果集中的列名和数据类型进行封装-->
     <!--如果列名或者数据类型不一致则封装失败，抛出异常-->
     <!--自定义结果集映射之后不再使用默认的结果集封装,-->
-    <resultMap id="userMap" type="user">
-        <!--jdbcType="varchar" javaType="String"不是必须指定的-->
-        <!--默认情况下会自动根据数据类型进行匹配-->
-        <id column="id" property="id" jdbcType="varchar" javaType="String"/>
+    <!--级联查询时映射策略有两种：分为嵌套结果（方式一）和嵌套查询（方式二）-->
+    <resultMap id="getUserByJoin" type="user">
+        <!--jdbcType="VARCHAR"指定属性在数据库中的类型 javaType="string"指定属性在java中的类型-->
+        <!--jdbcType的类型全为大写，mybaytis默认的javaType都是对应类型的类名小写-->
+        <!--默认情况下会自动根据数据类型进行匹配，不是必须指定的-->
+        <id column="id" property="id" jdbcType="VARCHAR" javaType="string"/>
         <result column="username" property="username"/>
         <result column="password" property="password"/>
         <!--当列和属性的数据类型同时满足EnumTypeHandler的映
             射规则时将使用自定义的类型转换对结果集进行转换-->
-        <result column="gender" property="gender" typeHandler="com.huangdeyi.distributed.domain.EnumTypeHandler"/>
+        <result column="gender" property="gender"
+                typeHandler="com.huangdeyi.distributed.domain.EnumTypeHandler"/>
 
-        <!--映射一的一方-->
+        <!--映射一的一方（映射方式和映射多的一方一样），直接将映射规则写在标签中-->
+        <association property="idCard" javaType="idCard">
+            <id column="id" property="id"/>
+            <result column="account" property="account"/>
+            <result column="createTime" property="createTime"
+                    typeHandler="com.huangdeyi.distributed.domain.DateTypeHandler"/>
+            <result column="expireTime" property="expireTime"
+                    typeHandler="com.huangdeyi.distributed.domain.DateTypeHandler"/>
+        </association>
 
-        <!--映射多的一方-->
+        <!--方式一：将多的一方映射规则直接定义在<collection/>中或者通过resultMap属性引用映射规则，ofType指定
+                    orderList集合中放的类型。需要在sql语句中写join语句，只发起一次查询即可得到多表连接之后的结
+                    果，然后从结果中封装出orderList。这种方式因多表连接查询而导致查询结果中存在很多冗余的数据
+                    并且join的表中如果存在相同的列名则只能取到从表的一条结果，需要用别名区分开相同名字的列-->
+        <collection property="orderList" ofType="order" javaType="ArrayList" resultMap="getOrder"/>
     </resultMap>
 
-    <select id="getUser" parameterType="string" resultMap="userMap">
-        select id,username,password,gengder
+    <resultMap id="getOrder" type="order">
+        <id column="orderid" property="id"/>
+        <result column="name" property="name"/>
+        <result column="price" property="price"/>
+    </resultMap>
+
+    <resultMap id="getUser" type="user">
+        <id column="id" property="id" jdbcType="VARCHAR" javaType="string"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="gender" property="gender"
+                typeHandler="com.huangdeyi.distributed.domain.EnumTypeHandler"/>
+
+        <!--方式二-->
+        <association property="idCard" column="id" select="getUserIdCard"/>
+
+
+        <!--方式二：将多的一方的映射规则放在其对应的映射文件中，通过select属性去调用它的方法，column指定将当前实
+                    体对应的字段值作为参数传到多的一方的方法中，然后将多的一方的方法返回值封装到当前实体中，总共
+                    发起了两次sql查询，但是不存在冗余的数据信息。
+        -->
+        <collection property="orderList" column="id" select="com.huangdeyi.distributed.dao.OrderDao.getOrderByUserId"/>
+    </resultMap>
+
+    <!--一的一方的resultMap，也可以写在当前文件-->
+    <resultMap id="idcardMap" type="idcard">
+        <id column="id" property="id"/>
+        <result column="account" property="account"/>
+        <result column="createTime" property="createTime"
+                typeHandler="com.huangdeyi.distributed.domain.DateTypeHandler"/>
+        <result column="expireTime" property="expireTime"
+                typeHandler="com.huangdeyi.distributed.domain.DateTypeHandler"/>
+    </resultMap>
+
+    <!--使用方式一级联查询user表-->
+    <select id="getUserByJoin" parameterType="string" resultMap="getUserByJoin">
+        select t.*,c.*,o.id orderid,o.name as name ,o.price as price
         from t_user t
-        where t.id = #{id}
+        inner join t_idcard c
+        on c.userid = t.id and t.id = #{id}
+        inner join t_orders o
+        on o.userid = t.id
+    </select>
+
+    <!--使用方式二级联查询user表-->
+    <select id="getUser" parameterType="string" resultMap="getUser">
+         select *
+         from t_user t
+         where t.id = #{id}
+    </select>
+
+    <select id="getUserIdCard" parameterType="string" resultMap="idcardMap">
+        select *
+        from t_idcard c
+        where c.userid = #{userid}
     </select>
 
 </mapper>

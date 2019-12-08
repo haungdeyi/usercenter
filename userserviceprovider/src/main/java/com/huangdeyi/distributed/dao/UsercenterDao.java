@@ -14,4 +14,7 @@ public interface UsercenterDao {
 
     //查找用户的IdCard
     public IdCard getUserIdCard(String userid);
+
+    //测试使用mycat操作数据库
+    public User getUserByMycat(String userId);
 }

@@ -93,4 +93,11 @@
         where c.userid = #{userid}
     </select>
 
+    <!--测试使用mycat操作数据库-->
+    <select id="getUserByMycat" parameterType="string" resultType="user">
+        select *
+        from t_user
+        where id = #{id}
+    </select>
+
 </mapper>

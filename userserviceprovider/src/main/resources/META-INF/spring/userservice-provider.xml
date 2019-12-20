@@ -3,12 +3,15 @@
        xmlns="http://www.springframework.org/schema/beans"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:cache="http://www.springframework.org/schema/cache"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context
                            http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/cache
+                           http://www.springframework.org/schema/cache/spring-cache.xsd
                            http://www.springframework.org/schema/aop
                            http://www.springframework.org/schema/context/spring-aop.xsd
                            http://www.springframework.org/schema/tx
@@ -17,6 +20,12 @@
                            http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
     <!--开启注解配置-->
     <context:annotation-config/>
+
+    <!--使用xml文件时开启缓存注解扫描功能-->
+    <cache:annotation-driven/>
+
+    <!--声明缓存管理器-->
+    <!--<bean id="cacheManager" class="org.springframework.cache.concurrent.ConcurrentMapCacheManager"/>-->
 
     <!--扫描指定包下的bean放入容器-->
     <context:component-scan base-package="com.huangdeyi.distributed">
@@ -39,6 +48,10 @@
     <!--导入其他配置文件-->
     <!--集成分布式消息activemq-->
     <import resource="classpath:spring-jms.xml"/>
+
+    <!--集成redis缓存-->
+    <!--<bean id="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">
+    </bean>-->
 
     <!--持久层使用Mybatis框架-->
     <!--配置数据库连接池-->

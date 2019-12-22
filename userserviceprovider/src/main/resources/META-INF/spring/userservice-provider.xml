@@ -50,8 +50,24 @@
     <import resource="classpath:spring-jms.xml"/>
 
     <!--集成redis缓存-->
-    <!--<bean id="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">
-    </bean>-->
+    <!--配置缓存管理器（2.0版本之前的配法）-->
+    <bean id="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">
+          <constructor-arg index="0" value="redisTemplate"/>
+    </bean>
+    <!--RedisTemplate模板-->
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+         <property name="connectionFactory" ref="jedisConnectionFactory"/>
+    </bean>
+    <!--Jedis连接工厂-->
+    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+          <property name="shardInfo">
+              <bean class="redis.clients.jedis.JedisShardInfo">
+                  <constructor-arg index="0" value="${redis.host}"/>
+                  <constructor-arg index="1" value="${redis.port}"/>
+              </bean>
+          </property>
+    </bean>
+
 
     <!--持久层使用Mybatis框架-->
     <!--配置数据库连接池-->

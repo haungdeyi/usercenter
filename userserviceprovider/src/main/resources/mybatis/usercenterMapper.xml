@@ -9,7 +9,7 @@
     <!--级联查询时映射策略有两种：分为嵌套结果（方式一）和嵌套查询（方式二）-->
     <resultMap id="getUserByJoin" type="user">
         <!--jdbcType="VARCHAR"指定属性在数据库中的类型 javaType="string"指定属性在java中的类型-->
-        <!--jdbcType的类型全为大写，mybaytis默认的javaType都是对应类型的类名小写-->
+        <!--jdbcType的类型全为大写，mybatis默认的javaType都是对应类型的类名小写-->
         <!--默认情况下会自动根据数据类型进行匹配，不是必须指定的-->
         <id column="id" property="id" jdbcType="VARCHAR" javaType="string"/>
         <result column="username" property="username"/>
@@ -19,7 +19,13 @@
         <result column="gender" property="gender"
                 typeHandler="com.huangdeyi.distributed.domain.EnumTypeHandler"/>
 
-        <!--映射一的一方（映射方式和映射多的一方一样），直接将映射规则写在标签中-->
+        <!--方式一：将多的一方映射规则直接定义在<collection/>中或者通过resultMap属性引用映射规则，ofType指定
+                    orderList集合中放的类型。需要在sql语句中写join语句，只发起一次查询即可得到多表连接之后的结
+                    果，然后从结果中封装出orderList。这种方式因多表连接查询而导致查询结果中存在很多冗余的数据
+                    并且join的表中如果存在相同的列名则只能取到从表的一条结果，需要用别名区分开相同名字的列-->
+        <collection property="orderList" ofType="order" javaType="ArrayList" resultMap="getOrder"/>
+
+        <!--映射一的一方（映射方式和映射多的一方一样），可以直接将映射规则写在标签中，也可以{link #oneResultMap}-->
         <association property="idCard" javaType="idCard">
             <id column="id" property="id"/>
             <result column="account" property="account"/>
@@ -28,12 +34,6 @@
             <result column="expireTime" property="expireTime"
                     typeHandler="com.huangdeyi.distributed.domain.DateTypeHandler"/>
         </association>
-
-        <!--方式一：将多的一方映射规则直接定义在<collection/>中或者通过resultMap属性引用映射规则，ofType指定
-                    orderList集合中放的类型。需要在sql语句中写join语句，只发起一次查询即可得到多表连接之后的结
-                    果，然后从结果中封装出orderList。这种方式因多表连接查询而导致查询结果中存在很多冗余的数据
-                    并且join的表中如果存在相同的列名则只能取到从表的一条结果，需要用别名区分开相同名字的列-->
-        <collection property="orderList" ofType="order" javaType="ArrayList" resultMap="getOrder"/>
     </resultMap>
 
     <resultMap id="getOrder" type="order">
@@ -41,26 +41,7 @@
         <result column="name" property="name"/>
         <result column="price" property="price"/>
     </resultMap>
-
-    <resultMap id="getUser" type="user">
-        <id column="id" property="id" jdbcType="VARCHAR" javaType="string"/>
-        <result column="username" property="username"/>
-        <result column="password" property="password"/>
-        <result column="gender" property="gender"
-                typeHandler="com.huangdeyi.distributed.domain.EnumTypeHandler"/>
-
-        <!--方式二-->
-        <association property="idCard" column="id" select="getUserIdCard"/>
-
-
-        <!--方式二：将多的一方的映射规则放在其对应的映射文件中，通过select属性去调用它的方法，column指定将当前实
-                    体对应的字段值作为参数传到多的一方的方法中，然后将多的一方的方法返回值封装到当前实体中，总共
-                    发起了两次sql查询，但是不存在冗余的数据信息。
-        -->
-        <collection property="orderList" column="id" select="com.huangdeyi.distributed.dao.OrderDao.getOrderByUserId"/>
-    </resultMap>
-
-    <!--一的一方的resultMap，也可以写在当前文件-->
+    <!--oneResultMap:一的一方的resultMap，也可以写在当前文件-->
     <resultMap id="idcardMap" type="idcard">
         <id column="id" property="id"/>
         <result column="account" property="account"/>
@@ -79,6 +60,23 @@
         inner join t_orders o
         on o.userid = t.id
     </select>
+
+    <!--嵌套查询-->
+    <resultMap id="getUser" type="user">
+        <id column="id" property="id" jdbcType="VARCHAR" javaType="string"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="gender" property="gender"
+                typeHandler="com.huangdeyi.distributed.domain.EnumTypeHandler"/>
+
+        <!--方式二：将多的一方的映射规则放在其对应的映射文件中，通过select属性去调用它的方法，column指定将当前实
+                    体对应的字段值作为参数传到多的一方的方法中，然后将多的一方的方法返回值封装到当前实体中，总共
+                    发起了两次sql查询，但是不存在冗余的数据信息-->
+        <collection property="orderList" column="id" select="com.huangdeyi.distributed.dao.OrderDao.getOrderByUserId"/>
+
+        <!--方式二-->
+        <association property="idCard" column="id" select="getUserIdCard"/>
+    </resultMap>
 
     <!--使用方式二级联查询user表-->
     <select id="getUser" parameterType="string" resultMap="getUser">

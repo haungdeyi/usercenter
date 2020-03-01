@@ -58,8 +58,7 @@ public class Provider implements UserService {
                     }
                 });
             }
-        }
-        else{
+        }else{
             response.setState("222");
             response.setData("用户不存在");
         }
